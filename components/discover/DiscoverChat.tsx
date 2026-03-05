@@ -1,8 +1,9 @@
 "use client";
 
 import { useState, useRef, useEffect } from "react";
+import Link from "next/link";
+import { useRouter } from "next/navigation";
 import { motion, AnimatePresence } from "framer-motion";
-
 export interface ChatMessage {
   id: string;
   role: "user" | "assistant";
@@ -10,83 +11,174 @@ export interface ChatMessage {
   timestamp: number;
 }
 
-interface DiscoverChatProps {
-  onComplete: (archiveId: string, notes: string[], identityStatement: string, narrative: string) => void;
-}
+const ÉTAT_STORAGE_KEY = "etat_discover";
 
-const OPENING =
-  "hello. i’m here to listen. tell me about yourself — a place you love, a memory that lingers, how you’d like to feel. we’ll find your scent through the conversation, not a form.";
-
-const LANDSCAPE_MAP: Record<string, string[]> = {
-  forest: ["vetiver", "moss", "birch"],
-  ocean: ["salt", "seaweed", "driftwood"],
-  city: ["concrete", "smoke", "streetlight"],
-  field: ["grass", "wheat", "wind"],
-  mountain: ["stone", "pine", "cold air"],
-  library: ["parchment", "leather", "dust"],
-  morning: ["dew", "mist", "first light"],
-  night: ["cool air", "stars", "silence"],
-  book: ["parchment", "paper", "cedar"],
-  rain: ["petrichor", "wet stone", "green"],
-  sea: ["salt", "seaweed", "driftwood"],
-  garden: ["soil", "herb", "flower"],
-  coffee: ["warm", "bitter", "smoke"],
-  skin: ["warmth", "salt", "clean"],
-  quiet: ["cedar", "paper", "silence"],
-  old: ["leather", "dust", "amber"],
-};
-
-function extractNotes(text: string): string[] {
-  const lower = text.toLowerCase();
-  const found: string[] = [];
-  for (const [key, notes] of Object.entries(LANDSCAPE_MAP)) {
-    if (lower.includes(key)) {
-      found.push(...notes);
-    }
+export function setEtatDiscoverStorage(data: {
+  archiveId: string;
+  notes: string[];
+  identityStatement: string;
+  narrative: string;
+}) {
+  if (typeof window !== "undefined") {
+    sessionStorage.setItem(ÉTAT_STORAGE_KEY, JSON.stringify(data));
   }
-  return Array.from(new Set(found)).slice(0, 4);
 }
+
+export function getEtatDiscoverStorage(): {
+  archiveId: string;
+  notes: string[];
+  identityStatement: string;
+  narrative: string;
+} | null {
+  if (typeof window === "undefined") return null;
+  try {
+    const raw = sessionStorage.getItem(ÉTAT_STORAGE_KEY);
+    return raw ? JSON.parse(raw) : null;
+  } catch {
+    return null;
+  }
+}
+
+interface DiscoverChatProps {
+  onComplete?: (archiveId: string, notes: string[], identityStatement: string, narrative: string) => void;
+  onShowResults: (archiveId: string, notes: string[], identityStatement: string, narrative: string) => void;
+}
+
+const STAGE_PROMPTS = [
+  "I'm here to listen. tell me about a place you always return to in your memory.",
+  "and what time of day does it feel like?",
+  "what feeling do you carry with you most often?",
+  "is there something you always have with you? something small.",
+  "how do you want to be remembered?",
+];
+
+const TIME_HINTS = ["dawn", "midday", "dusk", "midnight"];
+
+const PLACE_NOTES: Record<string, string> = {
+  forest: "vetiver",
+  ocean: "salt",
+  sea: "driftwood",
+  city: "smoke",
+  mountain: "pine",
+  garden: "soil",
+  library: "parchment",
+  room: "cedar",
+  home: "warmth",
+  beach: "salt",
+  rain: "petrichor",
+};
+const TIME_NOTES: Record<string, string> = {
+  dawn: "mist",
+  midday: "warm stone",
+  dusk: "amber",
+  midnight: "cool air",
+};
+const EMOTION_NOTES: Record<string, string> = {
+  quiet: "violet",
+  longing: "violet",
+  warmth: "amber",
+  melancholy: "vetiver",
+  joy: "neroli",
+  peace: "white tea",
+  calm: "white tea",
+  sad: "vetiver",
+  happy: "neroli",
+  love: "rose",
+  hope: "iris",
+};
+const OBJECT_NOTES: Record<string, string> = {
+  book: "parchment",
+  keys: "iron",
+  key: "iron",
+  ring: "musk",
+  photo: "cedar",
+  photograph: "cedar",
+  letter: "parchment",
+  stone: "stone",
+  flower: "petal",
+  watch: "metal",
+  pen: "ink",
+};
+const IDENTITY_NOTES: Record<string, string> = {
+  remembered: "white musk",
+  gentle: "white musk",
+  unforgettable: "oud",
+  quiet: "sandalwood",
+  quietly: "sandalwood",
+  bold: "oud",
+  soft: "cashmere musk",
+  forever: "amber",
+};
 
 function generateArchiveId() {
   return "ÉT-" + String(Math.floor(100000 + Math.random() * 900000));
 }
 
-function getReply(userText: string, turnCount: number): string {
-  const t = userText.toLowerCase().trim();
-  if (turnCount === 0) {
-    if (t.length < 10) return "tell me a little more. what place or moment comes to mind first?";
-    if (t.includes("?")) return "i’m the one asking — but gently. what’s a memory or a place that feels like you?";
-    return "that’s a start. what time of day fits that feeling? and is it more landscape, or more interior — a room, a person?";
+function findNote(text: string, map: Record<string, string>): string | null {
+  const lower = text.toLowerCase().trim();
+  for (const [key, note] of Object.entries(map)) {
+    if (lower.includes(key)) return note;
   }
-  if (turnCount === 1) {
-    return "i’m holding that. one more thing: in three words, how would someone who knows you well describe you?";
-  }
-  if (turnCount >= 2) {
-    return "i have enough. your archive is ready.";
-  }
-  return "go on. i’m listening.";
+  return null;
 }
 
-export default function DiscoverChat({ onComplete }: DiscoverChatProps) {
-  const [messages, setMessages] = useState<ChatMessage[]>(() => [
-    {
-      id: "0",
-      role: "assistant",
-      content: OPENING,
-      timestamp: Date.now(),
-    },
-  ]);
+/** Returns exactly 5 notes: [landscape, mood, heart, texture, signature] */
+function deriveNotes(answers: string[]): string[] {
+  const [place = "", time = "", emotion = "", object = "", identity = ""] = answers;
+  const landscape = findNote(place, PLACE_NOTES) ?? "cedar";
+  const mood = findNote(time, TIME_NOTES) ?? "mist";
+  const heart = findNote(emotion, EMOTION_NOTES) ?? "amber";
+  const texture = findNote(object, OBJECT_NOTES) ?? "parchment";
+  const signature = findNote(identity, IDENTITY_NOTES) ?? "white musk";
+  return [landscape, mood, heart, texture, signature];
+}
+
+function deriveIdentityStatement(answers: string[]): string {
+  const words = answers.join(" ").toLowerCase().split(/\s+/).filter((w) => w.length > 3);
+  const picked = words.slice(0, 3);
+  if (picked.length === 0) return "the one who remembers.";
+  return "the one who carries " + picked.join(", ") + ".";
+}
+
+const TYPEWRITER_MS = 40;
+const NOTE_STAGGER_MS = 400;
+const CLOSING_DELAY_AFTER_TYPEWRITER_MS = 2000;
+
+export default function DiscoverChat({ onShowResults }: DiscoverChatProps) {
+  const router = useRouter();
+  const [messages, setMessages] = useState<ChatMessage[]>([]);
   const [input, setInput] = useState("");
   const [isComposing, setIsComposing] = useState(false);
-  const [showResults, setShowResults] = useState(false);
-  const bottomRef = useRef<HTMLDivElement>(null);
-  const inputRef = useRef<HTMLTextAreaElement>(null);
+  const [answers, setAnswers] = useState<string[]>([]);
+  const [showTimeHints, setShowTimeHints] = useState(false);
+  const [closingPhase, setClosingPhase] = useState<
+    "idle" | "typewriter" | "notes" | "identity" | "links"
+  >("idle");
+  const [typewriterText, setTypewriterText] = useState("");
+  const [visibleNoteCount, setVisibleNoteCount] = useState(0);
+  const [finalData, setFinalData] = useState<{
+    archiveId: string;
+    notes: string[];
+    identityStatement: string;
+    narrative: string;
+  } | null>(null);
+  const inputRef = useRef<HTMLInputElement>(null);
+  const messagesEndRef = useRef<HTMLDivElement>(null);
+
+  const isStage1Opening = messages.length === 0;
 
   useEffect(() => {
-    bottomRef.current?.scrollIntoView({ behavior: "smooth" });
-  }, [messages]);
-
-  const userTurnCount = messages.filter((m) => m.role === "user").length;
+    if (isStage1Opening) {
+      setMessages([
+        {
+          id: "0",
+          role: "assistant",
+          content: STAGE_PROMPTS[0],
+          timestamp: Date.now(),
+        },
+      ]);
+    }
+  }, [isStage1Opening]);
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
@@ -100,97 +192,229 @@ export default function DiscoverChat({ onComplete }: DiscoverChatProps) {
       timestamp: Date.now(),
     };
     setMessages((prev) => [...prev, userMsg]);
+    const newAnswers = [...answers, trimmed];
+    setAnswers(newAnswers);
     setInput("");
+    setShowTimeHints(false);
 
-    const replyContent = getReply(trimmed, userTurnCount);
-    const isComplete = userTurnCount >= 2;
-
-    if (isComplete) {
+    if (newAnswers.length >= 5) {
       const archiveId = generateArchiveId();
-      const notes = extractNotes(
-        messages.filter((m) => m.role === "user").map((m) => m.content).join(" ") + " " + trimmed
-      );
-      if (notes.length < 2) notes.push("cedar", "paper", "warm parchment");
-      const identityStatement = "the quiet one who remembers everything";
+      const notes = deriveNotes(newAnswers);
+      const identityStatement = deriveIdentityStatement(newAnswers);
       const narrative =
         "your scent carries the weight of mornings before the world wakes. it holds the silence of libraries and the warmth of skin against paper. this is your archive. held. permanent.";
-
-      setMessages((prev) => [
-        ...prev,
-        {
-          id: String(prev.length + 1),
-          role: "assistant",
-          content: replyContent,
-          timestamp: Date.now(),
-        },
-      ]);
-      setTimeout(() => {
-        setShowResults(true);
-        onComplete(archiveId, notes.slice(0, 4), identityStatement, narrative);
-      }, 1200);
+      setFinalData({ archiveId, notes, identityStatement, narrative });
+      setClosingPhase("typewriter");
+      setVisibleNoteCount(0);
+      const fullText = "I think I've found your état.";
+      const startTypewriter = () => {
+        let i = 0;
+        const iv = setInterval(() => {
+          i++;
+          setTypewriterText(fullText.slice(0, i));
+          if (i >= fullText.length) {
+            clearInterval(iv);
+            setTimeout(() => {
+              setClosingPhase("notes");
+            }, CLOSING_DELAY_AFTER_TYPEWRITER_MS);
+          }
+        }, TYPEWRITER_MS);
+      };
+      setTimeout(startTypewriter, 2000);
       return;
     }
 
-    setTimeout(() => {
-      setMessages((prev) => [
-        ...prev,
-        {
-          id: String(prev.length + 1),
-          role: "assistant",
-          content: replyContent,
-          timestamp: Date.now(),
-        },
-      ]);
-    }, 600 + Math.min(trimmed.length * 20, 400));
+    const nextPromptIndex = newAnswers.length;
+    setMessages((prev) => [
+      ...prev,
+      {
+        id: String(prev.length + 1),
+        role: "assistant",
+        content: STAGE_PROMPTS[nextPromptIndex],
+        timestamp: Date.now(),
+      },
+    ]);
+    if (nextPromptIndex === 1) setShowTimeHints(true);
   };
 
-  if (showResults) return null;
+  useEffect(() => {
+    if (closingPhase !== "notes" || !finalData) return;
+    if (visibleNoteCount >= finalData.notes.length) {
+      const t = setTimeout(() => setClosingPhase("identity"), 1000);
+      return () => clearTimeout(t);
+    }
+    const t = setTimeout(() => setVisibleNoteCount((n) => n + 1), NOTE_STAGGER_MS);
+    return () => clearTimeout(t);
+  }, [closingPhase, finalData, visibleNoteCount]);
+
+  useEffect(() => {
+    if (closingPhase === "identity" && finalData) {
+      const t = setTimeout(() => setClosingPhase("links"), 1000);
+      return () => clearTimeout(t);
+    }
+  }, [closingPhase, finalData]);
+
+  const handleHintClick = (hint: string) => {
+    setInput(hint);
+    inputRef.current?.focus();
+  };
+
+  const handleSeeFullArchive = () => {
+    if (finalData) {
+      setEtatDiscoverStorage(finalData);
+      onShowResults(
+        finalData.archiveId,
+        finalData.notes,
+        finalData.identityStatement,
+        finalData.narrative
+      );
+    }
+  };
+
+  const handleOrderEtat = () => {
+    if (finalData) {
+      setEtatDiscoverStorage(finalData);
+      router.push("/order");
+    }
+  };
+
+  const showInput = closingPhase === "idle" || closingPhase === "typewriter";
 
   return (
-    <div className="mx-auto flex max-w-2xl flex-1 flex-col px-6 pt-8 pb-24 md:pb-32">
-      <p className="mb-8 font-courier text-[10px] uppercase tracking-label text-ash">
-        discover · conversation
-      </p>
-      <div className="flex flex-1 flex-col gap-8 overflow-y-auto">
+    <div className="mx-auto flex h-full max-w-xl flex-col bg-cream px-6">
+      <div
+        className="flex-1 space-y-6 overflow-y-auto py-8"
+        style={{ maxHeight: "calc(100vh - 12rem)" }}
+      >
         <AnimatePresence initial={false}>
-          {messages.map((msg, i) => (
+          {messages.map((msg) => (
             <motion.div
               key={msg.id}
-              initial={{ opacity: 0, y: 12 }}
+              initial={{ opacity: 0, y: 8 }}
               animate={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.4, ease: [0.25, 0.1, 0.25, 1] }}
-              className={msg.role === "user" ? "ml-8 text-right" : "mr-8"}
+              transition={{ duration: 0.6, ease: [0.25, 0.1, 0.25, 1] }}
+              className={msg.role === "user" ? "text-right" : ""}
             >
               {msg.role === "assistant" ? (
-                <p className="font-jost text-base font-light leading-[1.8] text-ink">
+                <p className="font-cormorant text-xl font-light italic leading-snug text-ink md:text-2xl">
                   {msg.content}
                 </p>
               ) : (
-                <p className="font-cormorant text-lg font-light italic text-ink">
+                <p className="font-jost text-sm font-light text-ash">
                   {msg.content}
                 </p>
               )}
             </motion.div>
           ))}
         </AnimatePresence>
-        <div ref={bottomRef} />
+
+        {closingPhase !== "idle" && (
+          <motion.div
+            initial={{ opacity: 0, y: 8 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.6 }}
+            className="space-y-4"
+          >
+            {(closingPhase === "typewriter" || typewriterText) && (
+              <p className="font-cormorant text-xl font-light italic text-ink md:text-2xl">
+                {typewriterText}
+              </p>
+            )}
+            {(closingPhase === "notes" ||
+              closingPhase === "identity" ||
+              closingPhase === "links") &&
+              finalData &&
+              visibleNoteCount > 0 && (
+                <p className="font-cormorant text-xl font-light italic text-gold-thread md:text-2xl">
+                  {finalData.notes.slice(0, visibleNoteCount).join(" · ")}
+                </p>
+              )}
+            {(closingPhase === "identity" || closingPhase === "links") &&
+              finalData && (
+                <>
+                  <hr className="border-t border-dust/40" />
+                  <p className="font-cormorant text-lg font-light italic text-ash">
+                    {finalData.identityStatement}
+                  </p>
+                </>
+              )}
+            {closingPhase === "links" && finalData && (
+              <motion.div
+                initial={{ opacity: 0 }}
+                animate={{ opacity: 1 }}
+                transition={{ duration: 0.5 }}
+                className="flex flex-col gap-4 pt-2"
+              >
+                <Link
+                  href="#"
+                  onClick={(e) => {
+                    e.preventDefault();
+                    handleSeeFullArchive();
+                  }}
+                  className="font-jost text-sm font-light text-ink hover:text-ash"
+                >
+                  see your full archive →
+                </Link>
+                <Link
+                  href="/order"
+                  onClick={(e) => {
+                    e.preventDefault();
+                    handleOrderEtat();
+                  }}
+                  className="font-jost text-sm font-light text-ink hover:text-ash"
+                >
+                  order your état →
+                </Link>
+              </motion.div>
+            )}
+          </motion.div>
+        )}
+        <div ref={messagesEndRef} />
       </div>
-      <form onSubmit={handleSubmit} className="mt-8 border-t border-dust pt-6">
-        <textarea
-          ref={inputRef}
-          value={input}
-          onChange={(e) => setInput(e.target.value)}
-          onCompositionStart={() => setIsComposing(true)}
-          onCompositionEnd={() => setIsComposing(false)}
-          placeholder="type here..."
-          rows={3}
-          className="min-h-[120px] w-full resize-none border-b border-dust bg-transparent font-jost text-base font-light text-ink placeholder:text-ash/60 focus:border-gold-thread focus:outline-none"
-          disabled={showResults}
-        />
-        <p className="mt-2 font-courier text-[10px] uppercase tracking-label text-ash">
-          your state. your scent.
-        </p>
-      </form>
+
+      {showInput && (
+        <>
+          <div className="border-t border-dust pt-6" />
+          <form onSubmit={handleSubmit} className="pb-8 pt-4">
+            {showTimeHints && (
+              <p className="mb-2 font-courier text-[10px] uppercase tracking-label text-ash">
+                {TIME_HINTS.map((h, i) => (
+                  <span key={h}>
+                    <button
+                      type="button"
+                      onClick={() => handleHintClick(h)}
+                      className="hover:text-ink"
+                    >
+                      {h}
+                    </button>
+                    {i < TIME_HINTS.length - 1 ? " · " : ""}
+                  </span>
+                ))}
+              </p>
+            )}
+            <div className="flex items-end gap-3 border-b border-ink pb-1">
+              <input
+                ref={inputRef}
+                type="text"
+                value={input}
+                onChange={(e) => setInput(e.target.value)}
+                onCompositionStart={() => setIsComposing(true)}
+                onCompositionEnd={() => setIsComposing(false)}
+                placeholder="type here..."
+                className="min-w-0 flex-1 bg-transparent font-jost text-sm font-light text-ink placeholder:text-ash focus:outline-none"
+                disabled={closingPhase !== "idle"}
+              />
+              <button
+                type="submit"
+                disabled={!input.trim() || isComposing}
+                className="font-courier text-sm text-ink hover:text-ash disabled:opacity-40"
+              >
+                →
+              </button>
+            </div>
+          </form>
+        </>
+      )}
     </div>
   );
 }

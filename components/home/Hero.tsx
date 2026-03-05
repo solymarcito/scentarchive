@@ -49,6 +49,7 @@ export default function Hero() {
         >
           <AnimatedLink
             href="/discover"
+            scroll={false}
             className="font-jost text-sm font-light text-ink"
           >
             discover your archive →

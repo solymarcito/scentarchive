@@ -19,6 +19,7 @@ export default function CTASection() {
         <div className="flex flex-col gap-6">
           <AnimatedLink
             href="/discover"
+            scroll={false}
             className="font-jost text-base font-light text-ink"
           >
             begin your identity →

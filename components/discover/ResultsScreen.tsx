@@ -1,7 +1,8 @@
 "use client";
 
+import { useRouter } from "next/navigation";
 import { motion } from "framer-motion";
-import AnimatedLink from "@/components/ui/AnimatedLink";
+import { setEtatDiscoverStorage } from "./DiscoverChat";
 
 interface ResultsScreenProps {
   archiveId: string;
@@ -12,11 +13,12 @@ interface ResultsScreenProps {
 
 const placeholderNotes = [
   "vetiver",
-  "smoked cedar",
-  "white tea",
-  "warm parchment",
+  "mist",
+  "amber",
+  "parchment",
+  "white musk",
 ];
-const placeholderStatement = "the quiet one who remembers everything";
+const placeholderStatement = "the one who remembers.";
 const placeholderNarrative =
   "your scent carries the weight of mornings before the world wakes. it holds the silence of libraries and the warmth of skin against paper. this is your archive. held. permanent.";
 
@@ -26,9 +28,20 @@ export default function ResultsScreen({
   identityStatement,
   narrative,
 }: ResultsScreenProps) {
+  const router = useRouter();
   const displayNotes = notes.length > 0 ? notes : placeholderNotes;
   const displayStatement = identityStatement || placeholderStatement;
   const displayNarrative = narrative || placeholderNarrative;
+
+  const handleOrderBottle = () => {
+    setEtatDiscoverStorage({
+      archiveId,
+      notes: displayNotes,
+      identityStatement: displayStatement,
+      narrative: displayNarrative,
+    });
+    router.push("/order");
+  };
 
   const handleSaveIdentity = () => {
     const content = `MAISON MARGIELA REPLICA: ÉTAT · IDENTITY FILE\nArchive ID: ${archiveId}\n\nNotes: ${displayNotes.join(" · ")}\n\n${displayStatement}\n\n${displayNarrative}`;
@@ -51,7 +64,7 @@ export default function ResultsScreen({
       <p className="font-courier text-[10px] uppercase tracking-label text-ash">
         YOUR ARCHIVE ID · {archiveId}
       </p>
-      <h2 className="mt-6 font-cormorant text-3xl font-light text-ink md:text-4xl">
+      <h2 className="mt-6 font-cormorant text-3xl font-light italic text-gold-thread md:text-4xl">
         {displayNotes.join(" · ")}
       </h2>
       <p className="mt-4 font-cormorant text-xl font-light italic text-ink">
@@ -61,15 +74,17 @@ export default function ResultsScreen({
         {displayNarrative}
       </p>
       <div className="mt-12 flex flex-col gap-6 sm:flex-row">
-        <AnimatedLink
-          href="/collection"
-          className="font-jost text-base font-light text-ink"
+        <button
+          type="button"
+          onClick={handleOrderBottle}
+          className="group relative inline-block font-jost text-base font-light text-ink transition-all duration-500 hover:text-ash"
         >
-          order your bottle →
-        </AnimatedLink>
+          order your état →
+          <span className="absolute bottom-0 left-0 h-px w-0 bg-ink transition-[width] duration-500 ease-[cubic-bezier(0.25,0.1,0.25,1)] group-hover:w-full" />
+        </button>
         <button
           onClick={handleSaveIdentity}
-          className="font-jost text-base font-light text-ink transition-all duration-500 hover:text-gold-thread"
+          className="font-jost text-base font-light text-gold-thread transition-all duration-500 hover:text-ash"
         >
           save your identity file
         </button>

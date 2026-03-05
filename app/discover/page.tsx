@@ -16,6 +16,12 @@ export default function DiscoverPage() {
   const [narrative, setNarrative] = useState("");
 
   useEffect(() => {
+    if (typeof window !== "undefined") {
+      window.scrollTo({ top: 0, behavior: "auto" });
+    }
+  }, [phase]);
+
+  useEffect(() => {
     if (phase !== "loading") return;
     const t = setTimeout(() => setPhase("results"), 2400);
     return () => clearTimeout(t);
@@ -33,7 +39,7 @@ export default function DiscoverPage() {
   );
 
   return (
-    <div className="flex min-h-screen flex-col justify-between bg-cream pt-24 pb-24 md:pb-32">
+    <div className="flex min-h-screen flex-col justify-between overflow-hidden bg-cream pt-24 pb-24 md:pb-32">
       <AnimatePresence mode="wait">
         {phase === "chat" && (
           <motion.div
@@ -43,7 +49,16 @@ export default function DiscoverPage() {
             exit={{ opacity: 0 }}
             transition={{ duration: 0.4 }}
           >
-            <DiscoverChat onComplete={handleComplete} />
+            <DiscoverChat
+              onComplete={handleComplete}
+              onShowResults={(id, n, statement, narr) => {
+                setArchiveId(id);
+                setNotes(n);
+                setIdentityStatement(statement);
+                setNarrative(narr);
+                setPhase("results");
+              }}
+            />
           </motion.div>
         )}
         {phase === "loading" && (

@@ -14,10 +14,11 @@ export default function AtelierPage() {
     date: "",
     message: "",
   });
+  const [submitted, setSubmitted] = useState(false);
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
-    // Placeholder - would integrate with booking system
+    setSubmitted(true);
   };
 
   return (
@@ -25,7 +26,7 @@ export default function AtelierPage() {
       <section className="relative h-[60vh] min-h-[400px] w-full">
         <Image
           src="https://images.unsplash.com/photo-1619994121345-223317e2e0e6?w=1600&q=80"
-          alt="ScentArchive atelier interior"
+          alt="Maison Margiela Replica ÉTAT atelier interior"
           fill
           className="archive-image object-cover"
           priority
@@ -58,6 +59,24 @@ export default function AtelierPage() {
           >
             request an appointment
           </motion.h2>
+          {submitted ? (
+            <motion.div
+              initial={{ opacity: 0, y: 12 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.5 }}
+              className="mt-12 space-y-4"
+            >
+              <p className="font-courier text-[10px] uppercase tracking-label text-ash">
+                REQUEST RECEIVED
+              </p>
+              <p className="font-cormorant text-2xl font-light italic text-ink">
+                we will be in touch.
+              </p>
+              <p className="font-jost text-base font-light text-ash">
+                a confirmation has been sent to {form.email || "your email"}.
+              </p>
+            </motion.div>
+          ) : (
           <form onSubmit={handleSubmit} className="mt-12 space-y-8">
             <div>
               <label className="mb-2 block font-courier text-[10px] uppercase tracking-label text-ash">
@@ -130,6 +149,7 @@ export default function AtelierPage() {
               submit request →
             </button>
           </form>
+          )}
         </div>
       </section>
     </div>

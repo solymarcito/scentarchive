@@ -6,12 +6,14 @@ interface AnimatedLinkProps {
   href: string;
   children: React.ReactNode;
   className?: string;
+  scroll?: boolean;
 }
 
-export default function AnimatedLink({ href, children, className = "" }: AnimatedLinkProps) {
+export default function AnimatedLink({ href, children, className = "", scroll = true }: AnimatedLinkProps) {
   return (
     <Link
       href={href}
+      scroll={scroll}
       className={`group relative inline-block ${className}`}
     >
       {children}

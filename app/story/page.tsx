@@ -6,15 +6,15 @@ import { motion } from "framer-motion";
 const timeline = [
   {
     year: "Phase 1",
-    text: "pilot stores in Europe, North America, Japan, South Korea.",
+    text: "pilot stores · Europe, North America, Japan, South Korea",
   },
   {
     year: "Phase 2",
-    text: "expand to additional Tier-1 cities based on pilot data.",
+    text: "Tier-1 city expansion · guided by pilot data",
   },
   {
     year: "Phase 3",
-    text: "broader regional rollout and e-commerce.",
+    text: "regional rollout · e-commerce · community events",
   },
 ];
 
@@ -40,16 +40,50 @@ export default function StoryPage() {
             we did not set out to make perfume. we set out to hold what cannot be
             held. memory. identity. the invisible archive each person carries.
           </motion.p>
+          <motion.p
+            initial={{ opacity: 0, y: 24 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.7, delay: 0.15, ease: [0.25, 0.1, 0.25, 1] }}
+            className="mt-6 font-jost text-base font-light leading-[1.8] text-ink"
+          >
+            built for those who already seek meaning in scent. and those who will.
+          </motion.p>
+          <motion.p
+            initial={{ opacity: 0, y: 24 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.7, delay: 0.2, ease: [0.25, 0.1, 0.25, 1] }}
+            className="mt-6 font-jost text-base font-light leading-[1.8] text-ash"
+          >
+            the system listens. it does not quiz. it converses.
+          </motion.p>
         </div>
       </section>
       <section className="border-b border-dust">
-        <div className="relative aspect-[21/9] w-full md:aspect-video">
-          <Image
-            src="/images/bottle-medium.png"
-            alt="Perfume creation"
-            fill
-            className="archive-image object-cover"
-          />
+        <div className="flex items-end justify-center gap-8 overflow-hidden bg-cream px-6 py-12 md:gap-12 md:py-16">
+          <div className="relative h-[200px] w-[80px] shrink-0 md:h-[280px] md:w-[110px]">
+            <Image
+              src="/images/bottle-small.png"
+              alt="your état — 0.34 oz · the introduction"
+              fill
+              className="object-contain object-bottom"
+            />
+          </div>
+          <div className="relative h-[240px] w-[100px] shrink-0 md:h-[320px] md:w-[130px]">
+            <Image
+              src="/images/bottle-medium.png"
+              alt="your état — 1 oz · the archive"
+              fill
+              className="object-contain object-bottom"
+            />
+          </div>
+          <div className="relative h-[280px] w-[120px] shrink-0 md:h-[360px] md:w-[150px]">
+            <Image
+              src="/images/bottle-large.png"
+              alt="your état — 2.5 oz · the permanence"
+              fill
+              className="object-contain object-bottom"
+            />
+          </div>
         </div>
         <div className="mx-auto max-w-3xl px-6 py-16">
           <motion.p
@@ -64,16 +98,34 @@ export default function StoryPage() {
             two years building the system — the prompts, the mapping, the
             formulas. each step designed to uncover, not invent.
           </motion.p>
+          <motion.p
+            initial={{ opacity: 0, y: 24 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true, amount: 0.2 }}
+            transition={{ duration: 0.7, delay: 0.05, ease: [0.25, 0.1, 0.25, 1] }}
+            className="mt-6 font-cormorant text-xl font-light italic text-ink"
+          >
+            or give it to someone you love. an identity, held in a bottle.
+          </motion.p>
         </div>
       </section>
       <section className="border-b border-dust py-16">
         <div className="mx-auto max-w-3xl px-6">
-          <motion.blockquote
+          <motion.div
             initial={{ opacity: 0, y: 24 }}
             whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true, amount: 0.2 }}
             transition={{ duration: 0.7, ease: [0.25, 0.1, 0.25, 1] }}
-            className="border-l-2 border-gold-thread pl-8 font-cormorant text-2xl font-light italic text-ink md:text-3xl"
+            className="space-y-6 font-jost text-base font-light leading-[1.8] text-ink"
+          >
+            <p>each bottle is engraved with a serial number. the label carries a QR code that holds your formula. the design is refillable.</p>
+          </motion.div>
+          <motion.blockquote
+            initial={{ opacity: 0, y: 24 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true, amount: 0.2 }}
+            transition={{ duration: 0.7, delay: 0.05, ease: [0.25, 0.1, 0.25, 1] }}
+            className="mt-8 border-l-2 border-gold-thread pl-8 font-cormorant text-2xl font-light italic text-ink md:text-3xl"
           >
             every bottle carries a serial number. every serial number carries a
             life.
@@ -82,24 +134,6 @@ export default function StoryPage() {
       </section>
       <section className="border-b border-dust">
         <div className="mx-auto max-w-3xl px-6 py-16">
-          <motion.p
-            initial={{ opacity: 0, y: 24 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true, amount: 0.2 }}
-            transition={{ duration: 0.7, ease: [0.25, 0.1, 0.25, 1] }}
-            className="font-jost text-base font-light leading-[1.8] text-ink"
-          >
-            today the archive grows. each identity added. each story held. we
-            believe in permanence. in records. in the quiet work of carrying
-            what matters.
-          </motion.p>
-        </div>
-      </section>
-      <section className="border-b border-dust py-16 md:py-24">
-        <div className="mx-auto max-w-3xl px-6">
-          <p className="mb-8 font-courier text-[10px] uppercase tracking-label text-ash">
-            sustainability
-          </p>
           <motion.div
             initial={{ opacity: 0, y: 24 }}
             whileInView={{ opacity: 1, y: 0 }}
@@ -108,25 +142,12 @@ export default function StoryPage() {
             className="space-y-6 font-jost text-base font-light leading-[1.8] text-ink"
           >
             <p>
-              we do not ask you to buy more than you need. personalized shopping
-              habits — the way you actually wear scent — guide what we offer. AI
-              precision narrows the gap between desire and purchase, so we
-              produce and recommend with less waste.
+              today the archive grows. each identity added. each story held. we
+              believe in permanence. in records. in the quiet work of carrying
+              what matters.
             </p>
-            <p>
-              try before you commit. a trial size exists so you can live with a
-              formula before ordering full size. three bottle sizes — 0.34 oz,
-              1 oz, 2.5 oz — let you match the vessel to your life, not the other
-              way around.
-            </p>
-            <blockquote className="border-l-2 border-gold-thread pl-6 font-cormorant text-xl font-light italic text-ink">
-              bring your bottle back. refill and return for a discount. the
-              same identity, the same formula, less in the world.
-            </blockquote>
-            <p>
-              sustainability here is not a badge. it is how we structure the
-              journey: less guessing, fewer wrong bottles, and a path to refill
-              instead of replace.
+            <p className="text-ash">
+              as the archive grows, so does our understanding of what people carry. trends emerge. new formulas follow. the system learns.
             </p>
           </motion.div>
         </div>
@@ -134,7 +155,7 @@ export default function StoryPage() {
       <section className="border-b border-dust py-16 md:py-24">
         <div className="mx-auto max-w-3xl px-6">
           <p className="mb-8 font-courier text-[10px] uppercase tracking-label text-ash">
-            inclusivity
+            how we work
           </p>
           <motion.div
             initial={{ opacity: 0, y: 24 }}
@@ -144,21 +165,10 @@ export default function StoryPage() {
             className="space-y-6 font-jost text-base font-light leading-[1.8] text-ink"
           >
             <p>
-              the AI speaks your language. multilingual support means the
-              conversation that uncovers your scent is not limited by geography
-              or tongue. your state, your words.
+              a trial size exists so you can live with the formula before committing. three sizes lower the entry barrier — begin at a level that fits your life. the AI produces only what is needed, reducing waste.
             </p>
             <p>
-              multiple price points exist by design. three bottle sizes — 0.34 oz,
-              1 oz, 2.5 oz — mean you can enter at a level that fits your life.
-              no single gate. no single definition of who gets to have an
-              identity in the archive.
-            </p>
-            <p>
-              identity inclusivity is non-negotiable. the system does not
-              judge, does not assume, does not bias the recommendation toward
-              any one idea of who you are. you describe. we listen. we map. the
-              result is yours.
+              bring your bottle back — refill and return for a discount. the conversation is not limited by language; the AI speaks yours. no judgment, no bias. you describe. we listen. we map.
             </p>
           </motion.div>
         </div>
@@ -193,6 +203,22 @@ export default function StoryPage() {
               </motion.div>
             ))}
           </div>
+        </div>
+      </section>
+      <section className="border-b border-dust py-16 md:py-24">
+        <div className="mx-auto max-w-3xl px-6">
+          <p className="mb-8 font-courier text-[10px] uppercase tracking-label text-ash">
+            what grows next
+          </p>
+          <motion.p
+            initial={{ opacity: 0, y: 24 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true, amount: 0.2 }}
+            transition={{ duration: 0.7, ease: [0.25, 0.1, 0.25, 1] }}
+            className="font-jost text-base font-light leading-[1.8] text-ink"
+          >
+            the archive does not close. identity competitions. scent gatherings. member-exclusive re-drops. a community built around the quiet act of knowing yourself.
+          </motion.p>
         </div>
       </section>
     </div>

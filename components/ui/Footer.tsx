@@ -25,7 +25,7 @@ export default function Footer() {
             </p>
             <ul className="mt-3 space-y-2">
               <li>
-                <Link href="/discover" className="font-jost text-sm font-light text-ink hover:text-ash">
+                <Link href="/discover" scroll={false} className="font-jost text-sm font-light text-ink hover:text-ash">
                   discover
                 </Link>
               </li>

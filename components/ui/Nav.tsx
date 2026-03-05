@@ -30,6 +30,7 @@ export default function Nav() {
               <Link
                 key={link.href}
                 href={link.href}
+                scroll={link.href !== "/discover"}
                 className="font-jost text-sm font-light text-ink transition-all duration-500 hover:text-ash"
               >
                 {link.label}
@@ -72,6 +73,7 @@ export default function Nav() {
                 >
                   <Link
                     href={link.href}
+                    scroll={link.href !== "/discover"}
                     onClick={() => setMobileOpen(false)}
                     className="font-cormorant text-3xl font-light italic text-ink"
                   >

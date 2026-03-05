@@ -1,14 +1,26 @@
 "use client";
 
+import { useEffect, useState } from "react";
 import Image from "next/image";
 import { useParams } from "next/navigation";
 import Link from "next/link";
 import { motion } from "framer-motion";
 import { products } from "@/lib/products";
+import { getEtatDiscoverStorage } from "@/components/discover/DiscoverChat";
 
-export default function ProductDetailPage() {
+export default function OrderPage() {
   const params = useParams();
   const product = products.find((p) => p.id === params.id);
+  const [etatData, setEtatData] = useState<{
+    archiveId: string;
+    notes: string[];
+    identityStatement: string;
+    narrative: string;
+  } | null>(null);
+
+  useEffect(() => {
+    setEtatData(getEtatDiscoverStorage());
+  }, []);
 
   if (!product) {
     return (
@@ -24,6 +36,15 @@ export default function ProductDetailPage() {
   return (
     <div className="min-h-screen bg-cream pt-24 pb-32">
       <div className="mx-auto max-w-5xl px-6 py-16">
+        {etatData && (
+          <motion.p
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            className="mb-8 font-courier text-[10px] uppercase tracking-label text-ash"
+          >
+            BASED ON YOUR ÉTAT · {etatData.archiveId}
+          </motion.p>
+        )}
         <motion.div
           initial={{ opacity: 0, y: 24 }}
           animate={{ opacity: 1, y: 0 }}
@@ -40,9 +61,6 @@ export default function ProductDetailPage() {
                 className="archive-image h-full w-full object-contain"
               />
             </div>
-            <p className="mt-4 font-courier text-[10px] uppercase tracking-label text-ash">
-              each label carries a QR code. your formula is remembered.
-            </p>
           </div>
           <div>
             <p className="font-courier text-[10px] uppercase tracking-label text-ash">
@@ -51,33 +69,37 @@ export default function ProductDetailPage() {
             <h1 className="mt-4 font-cormorant text-4xl font-light italic text-ink">
               {product.name}
             </h1>
-            <p className="mt-2 font-cormorant text-xl font-light italic text-ash">
-              {product.subtitle}
-            </p>
             <p className="mt-6 font-jost text-base font-light leading-[1.8] text-ink">
               {product.description}
             </p>
-            <p className="mt-6 font-jost text-lg font-light text-ink">
-              {product.size} · {product.price}
+            <div className="mt-8 space-y-2">
+              {products.map((p) => (
+                <p key={p.id} className="font-jost text-lg font-light text-ink">
+                  {p.size} · {p.price}
+                </p>
+              ))}
+            </div>
+            <p className="mt-2 font-jost text-sm font-light text-ash">
+              smaller sizes lower the entry barrier.
             </p>
             <div className="mt-10 flex flex-col gap-4">
               <Link
                 href="#"
                 className="font-courier text-xs uppercase tracking-nav text-ink transition-all duration-500 hover:text-ash"
               >
-                order a trial sample · 1–3ml →
+                order a 1–3ml trial sample
               </Link>
               <Link
                 href="#"
                 className="font-courier text-xs uppercase tracking-nav text-ink transition-all duration-500 hover:text-ash"
               >
-                order this size →
+                order full size
               </Link>
               <Link
-                href="/atelier"
+                href="#"
                 className="font-courier text-xs uppercase tracking-nav text-ash transition-all duration-500 hover:text-ink"
               >
-                visit the atelier →
+                refill & return — bring your bottle back for a discount
               </Link>
             </div>
             <Link
