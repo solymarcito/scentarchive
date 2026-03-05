@@ -23,7 +23,7 @@ export default function QuestionStep({ question, value, onChange }: QuestionStep
             onChange={(e) => onChange(e.target.value)}
             placeholder="begin here..."
             rows={4}
-            className="w-full resize-none border-b border-dust bg-transparent font-jost text-base font-light text-ink placeholder:text-ash/60 focus:border-gold-thread focus:outline-none"
+            className="min-h-[120px] w-full resize-none border-b border-dust bg-transparent font-jost text-base font-light text-ink placeholder:text-ash/60 focus:border-gold-thread focus:outline-none"
           />
         )}
         {question.type === "options" && question.options && (

@@ -13,7 +13,7 @@ export default function IdentityStory() {
         className="mx-auto max-w-xl px-6 text-center"
       >
         <p className="font-courier text-[10px] uppercase tracking-label text-ash">
-          ARCHIVE FILE · SA-000001
+          ARCHIVE FILE · ÉT-000001
         </p>
         <h2 className="mt-6 font-cormorant text-3xl font-light italic text-ink md:text-4xl">
           cedar, morning fog, old paperback books

@@ -20,8 +20,8 @@ export default function OptionSelect(props: OptionSelectProps) {
             onClick={() => onChange(opt.value)}
             className={
               isSelected
-                ? "border-b-2 border-gold-thread font-jost text-base font-light text-ink transition-all duration-500"
-                : "border-b border-transparent font-jost text-base font-light text-ash transition-all duration-500 hover:text-ink"
+                ? "border-b-2 border-gold-thread py-3 font-jost text-base font-light text-ink transition-all duration-500"
+                : "border-b border-transparent py-3 font-jost text-base font-light text-ash transition-all duration-500 hover:text-ink"
             }
           >
             {opt.label}

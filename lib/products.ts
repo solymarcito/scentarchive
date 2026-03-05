@@ -1,65 +1,22 @@
+// Bottle images in public/images/ — use bottle-small.png, bottle-medium.png, bottle-large.png
+export const BOTTLE_SIZES = [
+  { oz: "0.34", price: 30, label: "0.34 OZ", imagePath: "/images/bottle-small.png" },
+  { oz: "1", price: 60, label: "1 OZ", imagePath: "/images/bottle-medium.png" },
+  { oz: "2.5", price: 140, label: "2.5 OZ", imagePath: "/images/bottle-large.png" },
+] as const;
+
 export interface Product {
   id: string;
   edition: string;
   name: string;
-  price: string;
   category: "memory" | "nature" | "urban" | "intimate";
-  image: string;
 }
 
 export const products: Product[] = [
-  {
-    id: "001",
-    edition: "001",
-    name: "morning fog, old books",
-    price: "285",
-    category: "memory",
-    image:
-      "https://images.unsplash.com/photo-1541643600914-78b084683601?w=600&q=80",
-  },
-  {
-    id: "002",
-    edition: "002",
-    name: "cedar and rain",
-    price: "285",
-    category: "nature",
-    image:
-      "https://images.unsplash.com/photo-1594035910387-fea47794261f?w=600&q=80",
-  },
-  {
-    id: "003",
-    edition: "003",
-    name: "city at 3am",
-    price: "285",
-    category: "urban",
-    image:
-      "https://images.unsplash.com/photo-1619994121345-223317e2e0e6?w=600&q=80",
-  },
-  {
-    id: "004",
-    edition: "004",
-    name: "skin and salt",
-    price: "285",
-    category: "intimate",
-    image:
-      "https://images.unsplash.com/photo-1587017539504-67cfbddac569?w=600&q=80",
-  },
-  {
-    id: "005",
-    edition: "005",
-    name: "grandmother's garden",
-    price: "285",
-    category: "memory",
-    image:
-      "https://images.unsplash.com/photo-1595425970377-c9703cf48b6d?w=600&q=80",
-  },
-  {
-    id: "006",
-    edition: "006",
-    name: "open field, wind",
-    price: "285",
-    category: "nature",
-    image:
-      "https://images.unsplash.com/photo-1619994121345-223317e2e0e6?w=600&q=80",
-  },
+  { id: "001", edition: "001", name: "morning fog, old books", category: "memory" },
+  { id: "002", edition: "002", name: "cedar and rain", category: "nature" },
+  { id: "003", edition: "003", name: "city at 3am", category: "urban" },
+  { id: "004", edition: "004", name: "skin and salt", category: "intimate" },
+  { id: "005", edition: "005", name: "grandmother's garden", category: "memory" },
+  { id: "006", edition: "006", name: "open field, wind", category: "nature" },
 ];

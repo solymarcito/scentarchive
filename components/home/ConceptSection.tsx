@@ -15,8 +15,8 @@ export default function ConceptSection() {
           className="relative aspect-[3/4] min-h-[400px] overflow-hidden"
         >
           <Image
-            src="https://images.unsplash.com/photo-1541643600914-78b084683601?w=800&q=80"
-            alt="Hand holding amber glass perfume bottle"
+            src="/images/bottle-medium.png"
+            alt="Bottle"
             fill
             className="archive-image object-cover"
             sizes="(max-width: 768px) 100vw, 50vw"
@@ -37,16 +37,20 @@ export default function ConceptSection() {
           </h2>
           <div className="mt-8 space-y-6 font-jost text-base font-light leading-[1.8] text-ink">
             <p>
-              we believe every person carries an invisible archive. memories that
-              shape who you are. moments that remain when everything else fades.
-              your scent identity is already there — held in the way you move,
-              the places you return to, the people you carry with you.
+              perfume was meant to individualize. to mark a person, a moment, a
+              life. yet the market has flattened it. mass fragrance has become
+              standardized — the same notes, the same dreams, the same bottle on
+              every shelf. we believe every person carries an invisible archive
+              instead. memories that shape who you are. moments that remain when
+              everything else fades. your scent identity is already there — held
+              in the way you move, the places you return to, the people you carry
+              with you.
             </p>
             <p>
-              our process does not create. it uncovers. through prompts that feel
-              like questions from an old friend, we map the territory of your
-              identity. the result is not a perfume. it is a record. permanent.
-              yours.
+              our process does not create. it uncovers. through conversation that
+              feels like questions from an old friend, we map the territory of
+              your identity. the result is not a perfume. it is a record.
+              permanent. yours.
             </p>
           </div>
           <blockquote className="mt-10 border-l-2 border-gold-thread pl-6 font-cormorant text-lg font-light italic text-ink">

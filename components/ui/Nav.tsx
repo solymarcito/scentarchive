@@ -22,7 +22,7 @@ export default function Nav() {
             href="/"
             className="font-courier text-xs font-normal uppercase tracking-nav text-ink"
           >
-            SCENTARCHIVE
+            ÉTAT
           </Link>
 
           <div className="hidden md:flex md:items-center md:gap-8">

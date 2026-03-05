@@ -10,8 +10,11 @@ export default function Footer() {
               href="/"
               className="font-courier text-xs font-normal uppercase tracking-nav text-ink"
             >
-              SCENTARCHIVE
+              Maison Margiela Replica: ÉTAT
             </Link>
+            <p className="mt-2 font-courier text-[10px] uppercase tracking-label text-ash">
+              Your State. Your Scent.
+            </p>
             <p className="mt-4 font-jost text-sm font-light leading-relaxed text-ash">
               every bottle carries a serial number. every serial number carries a life.
             </p>
@@ -85,7 +88,7 @@ export default function Footer() {
         </div>
         <div className="mt-16 border-t border-dust pt-8">
           <p className="font-courier text-[10px] uppercase tracking-label text-ash">
-            © SCENTARCHIVE · ALL IDENTITIES ARCHIVED
+            © MAISON MARGIELA REPLICA: ÉTAT · ALL IDENTITIES ARCHIVED
           </p>
         </div>
       </div>

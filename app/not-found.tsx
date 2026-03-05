@@ -10,7 +10,7 @@ export default function NotFound() {
         this page has not been archived.
       </h1>
       <p className="mt-6 max-w-md font-jost text-sm font-light text-ash">
-        open the homepage to enter the archive. If every page is 404, run the dev server from the scentarchive folder: <code className="bg-dust/30 px-1">cd scentarchive && npm run dev</code>, then open the URL the terminal shows.
+        open the homepage to enter the archive. If every page is 404, run the dev server from the project folder: <code className="bg-dust/30 px-1">cd scentarchive && npm run dev</code>, then open the URL the terminal shows.
       </p>
       <Link
         href="/"

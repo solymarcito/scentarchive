@@ -25,7 +25,7 @@ const courier = Courier_Prime({
 });
 
 export const metadata: Metadata = {
-  title: "ScentArchive — your scent has always existed",
+  title: "Maison Margiela Replica: ÉTAT",
   description:
     "An AI-powered identity-archive perfume brand. Every person owns a unique scent identity file reflecting their memories, personality, and life narrative.",
 };

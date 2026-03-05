@@ -33,6 +33,14 @@ export default function Hero() {
         >
           it was simply waiting to be named.
         </motion.p>
+        <motion.p
+          initial={prefersReducedMotion ? {} : { opacity: 0, y: 20 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.7, delay: 0.75, ease: [0.25, 0.1, 0.25, 1] }}
+          className="mt-3 font-courier text-[10px] uppercase tracking-label text-ash"
+        >
+          Your State. Your Scent.
+        </motion.p>
         <motion.div
           initial={prefersReducedMotion ? {} : { opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}

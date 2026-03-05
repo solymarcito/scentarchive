@@ -4,9 +4,18 @@ import Image from "next/image";
 import { motion } from "framer-motion";
 
 const timeline = [
-  { year: "2023", text: "the concept emerges. scent as archive. identity as record." },
-  { year: "2024", text: "the first formulas. the first prompts. the first bottles." },
-  { year: "2025", text: "the archive opens. identities begin to be held." },
+  {
+    year: "Phase 1",
+    text: "pilot stores in Europe, North America, Japan, South Korea.",
+  },
+  {
+    year: "Phase 2",
+    text: "expand to additional Tier-1 cities based on pilot data.",
+  },
+  {
+    year: "Phase 3",
+    text: "broader regional rollout and e-commerce.",
+  },
 ];
 
 export default function StoryPage() {
@@ -36,7 +45,7 @@ export default function StoryPage() {
       <section className="border-b border-dust">
         <div className="relative aspect-[21/9] w-full md:aspect-video">
           <Image
-            src="https://images.unsplash.com/photo-1541643600914-78b084683601?w=1600&q=80"
+            src="/images/bottle-medium.png"
             alt="Perfume creation"
             fill
             className="archive-image object-cover"
@@ -84,6 +93,74 @@ export default function StoryPage() {
             believe in permanence. in records. in the quiet work of carrying
             what matters.
           </motion.p>
+        </div>
+      </section>
+      <section className="border-b border-dust py-16 md:py-24">
+        <div className="mx-auto max-w-3xl px-6">
+          <p className="mb-8 font-courier text-[10px] uppercase tracking-label text-ash">
+            sustainability
+          </p>
+          <motion.div
+            initial={{ opacity: 0, y: 24 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true, amount: 0.2 }}
+            transition={{ duration: 0.7, ease: [0.25, 0.1, 0.25, 1] }}
+            className="space-y-6 font-jost text-base font-light leading-[1.8] text-ink"
+          >
+            <p>
+              we do not ask you to buy more than you need. personalized shopping
+              habits — the way you actually wear scent — guide what we offer. AI
+              precision narrows the gap between desire and purchase, so we
+              produce and recommend with less waste.
+            </p>
+            <p>
+              try before you commit. a trial size exists so you can live with a
+              formula before ordering full size. three bottle sizes — 0.34 oz,
+              1 oz, 2.5 oz — let you match the vessel to your life, not the other
+              way around.
+            </p>
+            <blockquote className="border-l-2 border-gold-thread pl-6 font-cormorant text-xl font-light italic text-ink">
+              bring your bottle back. refill and return for a discount. the
+              same identity, the same formula, less in the world.
+            </blockquote>
+            <p>
+              sustainability here is not a badge. it is how we structure the
+              journey: less guessing, fewer wrong bottles, and a path to refill
+              instead of replace.
+            </p>
+          </motion.div>
+        </div>
+      </section>
+      <section className="border-b border-dust py-16 md:py-24">
+        <div className="mx-auto max-w-3xl px-6">
+          <p className="mb-8 font-courier text-[10px] uppercase tracking-label text-ash">
+            inclusivity
+          </p>
+          <motion.div
+            initial={{ opacity: 0, y: 24 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true, amount: 0.2 }}
+            transition={{ duration: 0.7, ease: [0.25, 0.1, 0.25, 1] }}
+            className="space-y-6 font-jost text-base font-light leading-[1.8] text-ink"
+          >
+            <p>
+              the AI speaks your language. multilingual support means the
+              conversation that uncovers your scent is not limited by geography
+              or tongue. your state, your words.
+            </p>
+            <p>
+              multiple price points exist by design. three bottle sizes — 0.34 oz,
+              1 oz, 2.5 oz — mean you can enter at a level that fits your life.
+              no single gate. no single definition of who gets to have an
+              identity in the archive.
+            </p>
+            <p>
+              identity inclusivity is non-negotiable. the system does not
+              judge, does not assume, does not bias the recommendation toward
+              any one idea of who you are. you describe. we listen. we map. the
+              result is yours.
+            </p>
+          </motion.div>
         </div>
       </section>
       <section className="border-b border-dust py-16">

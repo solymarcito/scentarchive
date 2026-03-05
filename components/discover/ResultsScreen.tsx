@@ -31,12 +31,12 @@ export default function ResultsScreen({
   const displayNarrative = narrative || placeholderNarrative;
 
   const handleSaveIdentity = () => {
-    const content = `SCENTARCHIVE · IDENTITY FILE\nArchive ID: ${archiveId}\n\nNotes: ${displayNotes.join(" · ")}\n\n${displayStatement}\n\n${displayNarrative}`;
+    const content = `MAISON MARGIELA REPLICA: ÉTAT · IDENTITY FILE\nArchive ID: ${archiveId}\n\nNotes: ${displayNotes.join(" · ")}\n\n${displayStatement}\n\n${displayNarrative}`;
     const blob = new Blob([content], { type: "text/plain" });
     const url = URL.createObjectURL(blob);
     const a = document.createElement("a");
     a.href = url;
-    a.download = `scentarchive-${archiveId}.txt`;
+    a.download = `etat-${archiveId}.txt`;
     a.click();
     URL.revokeObjectURL(url);
   };
